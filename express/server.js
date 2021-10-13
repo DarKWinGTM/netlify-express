@@ -127,17 +127,50 @@ async function mine(DATA){
 
         hash = await crypto.createHash('sha256').update( combined.slice(0, 24) ).digest('Uint8Array');
         hex_digest = toHex(hash);
-      
-        itr++; 
+        
+        if (is_wam){
+            good = hex_digest.substr(0, 4) === '0000';
+        } else {
+            good = hex_digest.substr(0, 6) === '000000';
+        }; 
+        
+        if (good){
+            if (is_wam){
+                last = parseInt(hex_digest.substr(4, 1), 16);
+            } else {
+                last = parseInt(hex_digest.substr(6, 1), 16);
+            }; good &= (last <= difficulty);
+        }; 
+        
+        itr++;
+        
+        if (itr % 10000 === 0){
+            console.log(`Still mining - tried ${itr} iterations ${((new Date()).getTime()-start) / 1000}s`);
+        }; 
+        
+        if (!good){ hash = null }; 
         
         if (itr >= 100000 * 10){
+            rand_arr    = ''; 
+            hex_digest  = `SORRY WE CAN NOT SOLVED LOOP ${ itr }`; 
             break; 
         }; 
 
     }; 
-  
+    
+    const end       = (new Date()).getTime();
+    const rand_str  = toHex(rand_arr);
+    
+    console.log(`Found hash in ${itr} iterations with ${account} ${rand_str}, last = ${last}, hex_digest ${hex_digest} taking ${(end-start) / 1000}s`)
+    const mine_work     = {account:account_str, nonce:rand_str, answer:hex_digest}; 
+    
+    //  this.postMessage(mine_work); 
+    //  return mine_work; 
+
+    console.log( mine_work ); 
+    
     return new Promise(function(resolve, reject) {
-        resolve({account:'', nonce:'', answer:rand_arr}); 
+        resolve({account:account_str, nonce:rand_str, answer:hex_digest}); 
     });
   
 }; 
