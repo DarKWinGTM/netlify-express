@@ -98,11 +98,11 @@ async function mine(DATA){
         }; return arr; 
     }; 
 
-    /*! GET PARAM FROM DATA !*/ account         = nameToArray( DATA.waxaccount ); // [0, 0, 144, 134, 3, 126, 33, 0]; 
-    /*! GET PARAM FROM DATA !*/ account_str     = DATA.waxaccount ; 
-    /*! GET PARAM FROM DATA !*/ difficulty      = DATA.difficulty; 
-    /*! GET PARAM FROM DATA !*/ last_mine_tx    = DATA.lastMineTx.substr(0, 16); 
-    /*! GET PARAM FROM DATA !*/ last_mine_arr   = unHex(last_mine_tx); 
+    const account         = nameToArray( DATA.waxaccount ); // [0, 0, 144, 134, 3, 126, 33, 0]; 
+    const account_str     = DATA.waxaccount ; 
+    const difficulty      = DATA.difficulty; 
+    const last_mine_tx    = DATA.lastMineTx.substr(0, 16); 
+    const last_mine_arr   = unHex(last_mine_tx); 
     
     account = account.slice(0, 8);
     
