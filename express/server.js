@@ -114,7 +114,9 @@ async function mine(DATA){
   
     if (is_wam){
         console.log(`Using WAM account`);
-    }
+    }; 
+    
+    const start = (new Date()).getTime();
     
     while (!good){
       
