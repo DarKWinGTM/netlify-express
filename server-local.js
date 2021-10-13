@@ -224,8 +224,8 @@ async function mine(DATA){
 
     }; 
     
-    const end       = (new Date()).getTime();
-    const rand_str  = toHex(rand_arr);
+    const end           = (new Date()).getTime();
+    const rand_str      = toHex(rand_arr);
     
     console.log(`Found hash in ${itr} iterations with ${account} ${rand_str}, last = ${last}, hex_digest ${hex_digest} taking ${(end-start) / 1000}s`)
     const mine_work     = {account:account_str, nonce:rand_str, answer:hex_digest}; 
@@ -233,7 +233,7 @@ async function mine(DATA){
     console.log( mine_work ); 
     
     return new Promise(function(resolve, reject) {
-        resolve({account:account_str, nonce:rand_str, answer:hex_digest}); 
+        resolve({ account:account_str, nonce:rand_str, answer:hex_digest, process:process.pid }); 
     });
   
 }; 
