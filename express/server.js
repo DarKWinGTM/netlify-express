@@ -98,15 +98,6 @@ async function mine(DATA){
         }; return arr; 
     }; 
 
-    //    let {mining_account, account, account_str, difficulty, last_mine_tx, last_mine_arr, sb} = _message.data;
-    
-    /*! xxxx.wam !*/
-    //  console.log( DATA.waxaccount ); 
-    //  console.log( nameToArray( DATA.waxaccount ) ); 
-    //  console.log( DATA.difficulty ); 
-    //  console.log( DATA.lastMineTx ); 
-
-    /*! GET PARAM FROM DATA !*/ mining_account  = 'm.federation'; 
     /*! GET PARAM FROM DATA !*/ account         = nameToArray( DATA.waxaccount ); // [0, 0, 144, 134, 3, 126, 33, 0]; 
     /*! GET PARAM FROM DATA !*/ account_str     = DATA.waxaccount ; 
     /*! GET PARAM FROM DATA !*/ difficulty      = DATA.difficulty; 
