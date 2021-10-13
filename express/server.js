@@ -107,14 +107,14 @@ async function mine(DATA){
   
     //  account = account.slice(0, 8);
     
-    //  const is_wam = account_str.substr(-4) === '.wam';
+    const is_wam = account_str.substr(-4) === '.wam';
   
     let good = false, itr = 0, rand = 0
     //  , hash, hex_digest, rand_arr, last;
     console.log(`Performing work with difficulty ${difficulty}, last tx is ${last_mine_tx}...`);
-    //  if (is_wam){
-    //      console.log(`Using WAM account`);
-    //  }
+    if (is_wam){
+        console.log(`Using WAM account`);
+    }
     
     while (!good){
       
