@@ -81,10 +81,6 @@ async function mine(DATA){
     while (!good){
       
         itr++;
-        
-        if (itr >= 100000 * 10){
-            break; 
-        }; 
 
     }; 
     
