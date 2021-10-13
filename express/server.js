@@ -58,7 +58,7 @@ router.get("/echo", (req, res) => {
 });
 
 // mine API
-app.get("/mine", (req, res) => {
+router.get("/mine", (req, res) => {
     if(
         req.url.match('mine') && 
         req.url.match('waxaccount') && 
@@ -85,54 +85,6 @@ app.get("/mine", (req, res) => {
         res.setHeader('Content-Type', 'text/html');
         res.send('?');
     }; 
-});
-
-// packedtrx API
-app.get("/packedtrx", (req, res) => {
-    packedtrx({
-        'chainId'           : (url.parse(req.url,true).query.chainId            || '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4'), 
-        'expiration'        : (url.parse(req.url,true).query.expiration         || '2021-06-29T03:14:42.000'), 
-        'block_num_or_id'   : (url.parse(req.url,true).query.block_num_or_id    || '126988588-1677423057'), 
-        'actor'             : (url.parse(req.url,true).query.actor              || 'w5fes.wam'), 
-        'nonce'             : (url.parse(req.url,true).query.nonce              || '543B189423D6B4BF')
-    }).then(result => {
-        res.setHeader('Content-Type', 'application/json');
-    res.write(JSON.stringify(result))
-        res.end();
-    }); 
-});
-app.post("/packedtrx", (req, res) => {
-    packedtrx({
-        'chainId'           : (url.parse(req.url,true).query.chainId            || '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4'), 
-        'expiration'        : (url.parse(req.url,true).query.expiration         || '2021-06-29T03:14:42.000'), 
-        'block_num_or_id'   : (url.parse(req.url,true).query.block_num_or_id    || '126988588-1677423057'), 
-        'actor'             : (url.parse(req.url,true).query.actor              || 'w5fes.wam'), 
-        'nonce'             : (url.parse(req.url,true).query.nonce              || '543B189423D6B4BF')
-    }).then(result => {
-        res.setHeader('Content-Type', 'application/json');
-        res.write(JSON.stringify(result))
-        res.end();
-    }); 
-});
-
-app.get("/trace", (req, res) => {
-	fetch(
-		'https://www.cloudflare.com/cdn-cgi/trace'
-	).then(
-		result => result.text()
-	).then(result => {
-		console.log(result)
-		res.setHeader('Content-Type', 'text/html');
-		res.write("<html>"); 
-		res.write("<head>"); 
-		res.write("<title>trace</title>"); 
-		res.write("</head>"); 
-		res.write("<body>"); 
-		res.write(`<pre>${ result }</pre>`); 
-		res.write("</body>"); 
-		res.write("<html>"); 
-        res.end();
-	});
 });
 
 module.exports = app;
@@ -294,103 +246,4 @@ async function mine(DATA){
     //      setTimeout(function(){
     //      }, 21500); 
     //  });
-}; 
-
-function arrayToHex(data) {
-    let result = '';
-    for (const x of data) {
-        result += ('00' + x.toString(16)).slice(-2);
-    }; return result;
-}; 
-async function get_rawabi_and_abi(account){
-    try {
-        const endpoint      = 'https://wax.blokcrafters.io';
-        const rpc           = new JsonRpc(endpoint, { fetch }); 
-        const api           = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder, textEncoder: new TextEncoder });
-
-        const rawAbi        = (await api.abiProvider.getRawAbi(account)).abi;
-        const abi           = await api.rawAbiToJson(rawAbi);
-
-        const result        = {
-            accountName : account,
-            rawAbi,
-            abi
-        }; return result;
-    } catch (err) {
-        console.log(err);
-    }
-}; 
-async function packedtrx(DATA){
-    try {
-        const chainId       = DATA['chainId'];
-        const abiObj        = await get_rawabi_and_abi('m.federation');
-
-        const rpc           = new JsonRpc('http://wax.blokcrafters.io');
-        const api           = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder(), chainId }); 
-        api.cachedAbis.set('m.federation', {abi: abiObj.abi, rawAbi: abiObj.rawAbi});
-        const transaction   = {
-            "expiration"        : DATA['expiration'],
-            "ref_block_num"     : 65535 & Number(DATA['block_num_or_id'].split('-')[0]), //   block_num_or_id: 126815123 65535 & 126815126
-            "ref_block_prefix"  : Number(DATA['block_num_or_id'].split('-')[1]),
-            "actions": [
-                {
-                    "account"       : "m.federation", 
-                    "name"          : "mine", 
-                    "authorization"     : [{
-                        "actor"         : DATA['actor'],
-                        "permission"    : "active"
-                    }],
-                    data        : {
-                        miner           : DATA['actor'], // wax.userAccount
-                        nonce           : DATA['nonce']
-                    }
-                }
-            ]
-        }; 
-	    
-        const transactions  = { ...transaction, actions: await api.serializeActions(transaction.actions) };
-        const serial        = api.serializeTransaction(transactions);
-        const packed_trx    = arrayToHex(serial); 
-        
-        //  const result        = await api.transact(transaction, { broadcast: false, sign: false });
-        //  const abis          = await api.getTransactionAbis(transaction);
-        //  const requiredKeys  = privateKeys.map((privateKey) => PrivateKey.fromString(privateKey).getPublicKey().toString());
-        //  const packed_trx    = arrayToHex(result.serializedTransaction); 
-        //  console.log(result);
-        //  console.log(packed_trx); 
-        //  console.log(result.serializedTransaction.toString()); 
-
-        return new Promise(function(resolve, reject) {
-            resolve({packed_trx, serializedTransaction : serial, transactions}); 
-        });
-
-/*!
-        const action        = await api.serializeActions(transaction.actions);
-        const result        = await api.transact(transaction, { broadcast: false, sign: false });
-        const abis          = await api.getTransactionAbis(transaction);
-        const requiredKeys  = privateKeys.map((privateKey) => PrivateKey.fromString(privateKey).getPublicKey().toString());
-        const packed_trx    = arrayToHex(result.serializedTransaction); 
-        //  console.log(result);
-        //  console.log(packed_trx); 
-        //  console.log(result.serializedTransaction.toString()); 
-
-        return new Promise(function(resolve, reject) {
-            resolve({packed_trx, serializedTransaction : result.serializedTransaction, transaction, action}); 
-        });
-	
-        const result        = await api.transact(transaction, { broadcast: false, sign: false });
-        const abis          = await api.getTransactionAbis(transaction);
-        const requiredKeys  = privateKeys.map((privateKey) => PrivateKey.fromString(privateKey).getPublicKey().toString());
-        const packed_trx    = arrayToHex(result.serializedTransaction); 
-        //  console.log(result);
-        //  console.log(packed_trx); 
-        //  console.log(result.serializedTransaction.toString()); 
-
-        return new Promise(function(resolve, reject) {
-            resolve({packed_trx, serializedTransaction : result.serializedTransaction, transaction}); 
-        });
-!*/
-    } catch (err) {
-        console.log('err is', err);
-    }
 }; 
