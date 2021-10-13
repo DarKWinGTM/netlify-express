@@ -33,9 +33,19 @@ if (cluster.isMaster) {
 } else {
 
 	router.get('/', (req, res) => {
-	res.writeHead(200, { 'Content-Type': 'text/html' });
-	res.write('<h1>Hello from Express.js!</h1>');
-	res.end();
+        //  res.writeHead(200, { 'Content-Type': 'text/html' });
+        //  res.write('<h1>Hello from Express.js!</h1>');
+        //  res.end();
+        res.setHeader('Content-Type', 'text/html');
+        res.write("<html>"); 
+        res.write("<head>"); 
+        res.write(`<title>now-express</title>`); 
+        res.write("</head>"); 
+        res.write("<body>"); 
+        res.write(`<h1>now-express ${ process.pid }</h1>`); 
+        res.write("</body>"); 
+        res.write("<html>"); 
+        res.end(); 
 	});
 	
 	router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
