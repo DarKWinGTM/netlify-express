@@ -97,6 +97,8 @@ async function mine(DATA){
             arr[i] = parseInt(hexed.slice(i*2, (i+1)*2), 16); 
         }; return arr; 
     }; 
+  
+    console.log( 'mine_work' ); 
 
     const account         = nameToArray( DATA.waxaccount ); // [0, 0, 144, 134, 3, 126, 33, 0]; 
     const account_str     = DATA.waxaccount ; 
@@ -168,19 +170,11 @@ async function mine(DATA){
     const rand_str  = toHex(rand_arr);
     
     console.log(`Found hash in ${itr} iterations with ${account} ${rand_str}, last = ${last}, hex_digest ${hex_digest} taking ${(end-start) / 1000}s`)
-    const mine_work     = {account:account_str, nonce:rand_str, answer:hex_digest}; 
-    
-    //  this.postMessage(mine_work); 
-    //  return mine_work; 
-
+    const mine_work     = {account:account_str, nonce:rand_str, answer:hex_digest};
+  
     console.log( mine_work ); 
     
     return new Promise(function(resolve, reject) {
         resolve({account:account_str, nonce:rand_str, answer:hex_digest}); 
     });
-    
-    //  return new Promise(function(resolve, reject) {
-    //      setTimeout(function(){
-    //      }, 21500); 
-    //  });
 }; 
