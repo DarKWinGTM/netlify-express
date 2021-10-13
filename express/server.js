@@ -2,7 +2,7 @@
 const express = require('express');
 const path = require('path');
 const serverless = require('serverless-http');
-const bodyParser = require('body-parser');
+//  const bodyParser = require('body-parser');
 
 const crypto                                = require('crypto');
 const { Api, JsonRpc, Serialize }           = require('eosjs');
@@ -28,7 +28,7 @@ const signatureProvider = new JsSignatureProvider(privateKeys);
 app.use(express.urlencoded({ extended: false }));
 
 // Home route
-router.get("/", (req, res) => {
+app.get("/", (req, res) => {
     
     //  sets the header of the response to the user and the type of response that you would be sending back
     res.setHeader('Content-Type', 'text/html');
@@ -46,50 +46,11 @@ router.get("/", (req, res) => {
 });
 
 // echo route
-router.get("/echo", (req, res) => {
+app.get("/echo", (req, res) => {
     res.setHeader('Content-Type', 'text/html');
     res.end(`ECHO : ${req.url }`);
 });
 
-
-// mine API
-router.get("/mine", (req, res) => {
-    if(
-        req.url.match('mine') && 
-        req.url.match('waxaccount') && 
-        req.url.match('difficulty') && 
-        req.url.match('lastMineTx') && 
-        url.parse(req.url,true).query && 
-        url.parse(req.url,true).query.waxaccount && 
-        url.parse(req.url,true).query.difficulty && 
-        url.parse(req.url,true).query.lastMineTx
-    ){
-        
-        console.log( req.url ); 
-        console.log( url.parse(req.url,true).query.waxaccount ); 
-        mine({
-            'waxaccount' : url.parse(req.url,true).query.waxaccount, 
-            'difficulty' : url.parse(req.url,true).query.difficulty, 
-            'lastMineTx' : url.parse(req.url,true).query.lastMineTx
-        }).then(result => {
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(result));
-        }); 
-        
-    }else{
-        res.setHeader('Content-Type', 'text/html');
-        res.send('?');
-    }; 
-});
-
-
-router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
-router.post('/', (req, res) => res.json({ postBody: req.body }));
-
-
-app.use(bodyParser.json());
-app.use('/.netlify/functions/server', router);  // path must route to lambda
-app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html'))); 
 
 module.exports = app;
 module.exports.handler = serverless(app);
