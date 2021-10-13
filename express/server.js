@@ -112,7 +112,7 @@ async function mine(DATA){
     }; 
   
     return new Promise(function(resolve, reject) {
-        resolve({account:'', nonce:'', answer:''}); 
+        resolve({account:'', nonce:'', answer:rand_arr}); 
     });
   
 }; 
