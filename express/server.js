@@ -111,7 +111,6 @@ async function mine(DATA){
   
     let good = false, itr = 0, rand = 0
     var hash, hex_digest, rand_arr, last;
-    //  , hash, hex_digest, rand_arr, last;
     
     console.log(`Performing work with difficulty ${difficulty}, last tx is ${last_mine_tx}...`);
   
@@ -123,14 +122,13 @@ async function mine(DATA){
       
         var rand_arr = getRand();
         
-        //  const combined = new Uint8Array(account.length + last_mine_arr.length + rand_arr.length);
-        //  combined.set(account);
-        //  combined.set(last_mine_arr, account.length);
-        //  combined.set(rand_arr, account.length + last_mine_arr.length);
+        const combined = new Uint8Array(account.length + last_mine_arr.length + rand_arr.length);
+        combined.set(account);
+        combined.set(last_mine_arr, account.length);
+        combined.set(rand_arr, account.length + last_mine_arr.length);
 
-        //  hash = await crypto.createHash('sha256').update( combined.slice(0, 24) ).digest('Uint8Array');
-
-        //  hex_digest = toHex(hash);
+        hash = await crypto.createHash('sha256').update( combined.slice(0, 24) ).digest('Uint8Array');
+        hex_digest = toHex(hash);
       
         itr++; 
         
