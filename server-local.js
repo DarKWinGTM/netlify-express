@@ -8,7 +8,10 @@
 
 'use strict';
 
-const app = require('./express/server');
+const app       = require('./express/server');
+const cpus      = require('os').cpus();
+const cluster   = require('cluster');
+
 const nodeType  = (cluster.isMaster) ? 'Master' : 'Worker';
 
 if (cluster.isMaster) {
