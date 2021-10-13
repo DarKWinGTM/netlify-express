@@ -102,7 +102,7 @@ async function mine(DATA){
     
     while (!good){
       
-        //  rand_arr = getRand();
+        var rand_arr = getRand();
       
         itr++;
         if (itr >= 100000 * 10){
@@ -110,9 +110,9 @@ async function mine(DATA){
         }; 
 
     }; 
-    
-    
+  
     return new Promise(function(resolve, reject) {
         resolve({account:'', nonce:'', answer:''}); 
     });
+  
 }; 
