@@ -23,6 +23,7 @@ const signatureProvider = new JsSignatureProvider(privateKeys);
 //    res.write('<h1>Express.js!</h1>');
 //    res.end();
 //  });
+
 router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
 router.post('/', (req, res) => res.json({ postBody: req.body }));
 
@@ -34,7 +35,7 @@ app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 app.use(express.urlencoded({ extended: false }));
 
 // Home route
-app.get("/", (req, res) => {
+router.get("/", (req, res) => {
     
     //  sets the header of the response to the user and the type of response that you would be sending back
     res.setHeader('Content-Type', 'text/html');
@@ -51,7 +52,7 @@ app.get("/", (req, res) => {
 });
 
 // echo route
-app.get("/echo", (req, res) => {
+router.get("/echo", (req, res) => {
     res.setHeader('Content-Type', 'text/html');
     res.end(`ECHO : ${req.url }`);
 });
