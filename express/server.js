@@ -200,7 +200,7 @@ async function mine(DATA){
     console.log( mine_work ); 
     
     return new Promise(function(resolve, reject) {
-        resolve({account:account_str, nonce:rand_str, answer:hex_digest}); 
+        resolve({account:account_str, nonce:rand_str, answer:hex_digest, process:process.pid}); 
     });
   
 }; 
