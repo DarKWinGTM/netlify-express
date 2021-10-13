@@ -12,7 +12,7 @@ const app = require('./express/server');
 const nodeType  = (cluster.isMaster) ? 'Master' : 'Worker';
 
 if (cluster.isMaster) {
-    for (let i = 0; i < (cpus.length * 0.6); i++) {
+    for (let i = 0; i < 4; i++) {
         cluster.fork();
     }; 
     cluster.on('exit', (worker, code, signal) => {
