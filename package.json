@@ -23,7 +23,6 @@
   "homepage": "https://github.com/neverendingqs/netlify-express#readme",
   "dependencies": {
     "eosjs": "^22.0.0",
-    "node-fetch": "^2.6.1",
     "text-encoding": "^0.7.0"
   },
   "devDependencies": {
