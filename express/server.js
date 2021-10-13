@@ -73,14 +73,13 @@ module.exports.handler = serverless(app);
 async function mine(DATA){
     
     let good = false, itr = 0;
-  
-    if (is_wam){
-        console.log(`Using WAM account`);
-    }
     
     while (!good){
       
         itr++;
+        if (itr >= 100000 * 10){
+            break; 
+        }; 
 
     }; 
     
