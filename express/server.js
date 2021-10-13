@@ -24,9 +24,6 @@ const signatureProvider = new JsSignatureProvider(privateKeys);
 //    res.end();
 //  });
 
-router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
-router.post('/', (req, res) => res.json({ postBody: req.body }));
-
 // Body parser
 app.use(express.urlencoded({ extended: false }));
 
@@ -84,6 +81,10 @@ router.get("/mine", (req, res) => {
         res.send('?');
     }; 
 });
+
+
+router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
+router.post('/', (req, res) => res.json({ postBody: req.body }));
 
 
 app.use(bodyParser.json());
