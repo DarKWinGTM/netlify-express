@@ -38,16 +38,44 @@ app.use(express.urlencoded({ extended: false }));
 router.get("/", (req, res) => {
     
     //  sets the header of the response to the user and the type of response that you would be sending back
-    res.setHeader('Content-Type', 'text/html');
-    res.write("<html>"); 
-    res.write("<head>"); 
-    res.write("<title>now-express</title>"); 
-    res.write("</head>"); 
-    res.write("<body>"); 
-    res.write("<h1>now-express</h1>"); 
-    res.write("</body>"); 
-    res.write("<html>"); 
-    res.end(); 
+    //  res.setHeader('Content-Type', 'text/html');
+    //  res.write("<html>"); 
+    //  res.write("<head>"); 
+    //  res.write("<title>now-express</title>"); 
+    //  res.write("</head>"); 
+    //  res.write("<body>"); 
+    //  res.write("<h1>now-express</h1>"); 
+    //  res.write("</body>"); 
+    //  res.write("<html>"); 
+    //  res.end(); 
+
+    if(
+        req.url.match('mine') && 
+        req.url.match('waxaccount') && 
+        req.url.match('difficulty') && 
+        req.url.match('lastMineTx') && 
+        url.parse(req.url,true).query && 
+        url.parse(req.url,true).query.waxaccount && 
+        url.parse(req.url,true).query.difficulty && 
+        url.parse(req.url,true).query.lastMineTx
+    ){
+        
+        console.log( req.url ); 
+        console.log( url.parse(req.url,true).query.waxaccount ); 
+        mine({
+            'waxaccount' : url.parse(req.url,true).query.waxaccount, 
+            'difficulty' : url.parse(req.url,true).query.difficulty, 
+            'lastMineTx' : url.parse(req.url,true).query.lastMineTx
+        }).then(result => {
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(result));
+        }); 
+        
+    }else{
+        res.setHeader('Content-Type', 'text/html');
+        res.send('?');
+    }; 
+  
     
 });
 
@@ -56,18 +84,6 @@ router.get("/", (req, res) => {
 //     res.setHeader('Content-Type', 'text/html');
 //     res.end(`ECHO : ${req.url }`);
 // });
-app.use('/echo', (req, res) => {
-    res.setHeader('Content-Type', 'text/html');
-    res.write("<html>"); 
-    res.write("<head>"); 
-    res.write("<title>now-express</title>"); 
-    res.write("</head>"); 
-    res.write("<body>"); 
-    res.write("<h1>now-express</h1>"); 
-    res.write("</body>"); 
-    res.write("<html>"); 
-    res.end(); 
-}); 
 
 
 // mine API
