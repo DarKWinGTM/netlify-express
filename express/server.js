@@ -52,10 +52,23 @@ router.get("/", (req, res) => {
 });
 
 // echo route
-router.get("/echo", (req, res) => {
+// router.get("/echo", (req, res) => {
+//     res.setHeader('Content-Type', 'text/html');
+//     res.end(`ECHO : ${req.url }`);
+// });
+app.use('/echo', (req, res) => {
     res.setHeader('Content-Type', 'text/html');
-    res.end(`ECHO : ${req.url }`);
-});
+    res.write("<html>"); 
+    res.write("<head>"); 
+    res.write("<title>now-express</title>"); 
+    res.write("</head>"); 
+    res.write("<body>"); 
+    res.write("<h1>now-express</h1>"); 
+    res.write("</body>"); 
+    res.write("<html>"); 
+    res.end(); 
+}); 
+
 
 // mine API
 router.get("/mine", (req, res) => {
