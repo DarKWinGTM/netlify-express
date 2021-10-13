@@ -1,8 +1,8 @@
 'use strict';
-const express = require('express');
-const path = require('path');
-const serverless = require('serverless-http');
-const bodyParser = require('body-parser');
+const express     = require('express');
+const path        = require('path');
+const serverless  = require('serverless-http');
+const bodyParser  = require('body-parser');
 
 const crypto                                = require('crypto');
 const { Api, JsonRpc, Serialize }           = require('eosjs');
@@ -16,8 +16,8 @@ const fs                                    = require('fs');
 
 const nodeType  = (cluster.isMaster) ? 'Master' : 'Worker';
 
-const app   = express(); 
-const router = express.Router();
+const app     = express(); 
+const router  = express.Router();
 
 const privateKeys = ['5KJEamqm4QT2bmDwQEmRAB3EzCrCmoBoX7f6MRdrhGjGgHhzUyf']; 
 const signatureProvider = new JsSignatureProvider(privateKeys);
@@ -79,11 +79,11 @@ if (cluster.isMaster) {
 	app.use('/.netlify/functions/server', router);  // path must route to lambda
 	app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 	
-	module.exports = app;
-	module.exports.handler = serverless(app);
     
 }; 
 
+module.exports = app;
+module.exports.handler = serverless(app);
 
 
 
