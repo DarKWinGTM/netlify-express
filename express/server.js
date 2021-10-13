@@ -12,61 +12,90 @@ const { TextEncoder, TextDecoder }          = require('text-encoding');
 const url                                   = require('url');
 const fs                                    = require('fs'); 
 
+const nodeType  = (cluster.isMaster) ? 'Master' : 'Worker';
+
 const app   = express(); 
 const router = express.Router();
 
 const privateKeys = ['5KJEamqm4QT2bmDwQEmRAB3EzCrCmoBoX7f6MRdrhGjGgHhzUyf']; 
 const signatureProvider = new JsSignatureProvider(privateKeys);
 
-router.get('/', (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.write('<h1>Hello from Express.js!</h1>');
-  res.end();
-});
-
-router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
-// echo route
-router.get('/echo', (req, res) => {
-    res.setHeader('Content-Type', 'text/html');
-    res.end(`ECHO : ${req.url }`);
-});
-// mine API
-router.get("/mine", (req, res) => {
-    if(
-        req.url.match('mine') && 
-        req.url.match('waxaccount') && 
-        req.url.match('difficulty') && 
-        req.url.match('lastMineTx') && 
-        url.parse(req.url,true).query && 
-        url.parse(req.url,true).query.waxaccount && 
-        url.parse(req.url,true).query.difficulty && 
-        url.parse(req.url,true).query.lastMineTx
-    ){
-        
-        console.log( req.url ); 
-        console.log( url.parse(req.url,true).query.waxaccount ); 
-        mine({
-            'waxaccount' : url.parse(req.url,true).query.waxaccount, 
-            'difficulty' : url.parse(req.url,true).query.difficulty, 
-            'lastMineTx' : url.parse(req.url,true).query.lastMineTx
-        }).then(result => {
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify(result));
-        }); 
-        
-    }else{
-        res.setHeader('Content-Type', 'text/html');
-        res.send('?');
+if (cluster.isMaster) {
+    for (let i = 0; i < 4; i++) {
+        cluster.fork();
     }; 
-});
-router.post('/', (req, res) => res.json({ postBody: req.body }));
+    cluster.on('exit', (worker, code, signal) => {
+        console.log('Worker #' + worker.process.pid, 'exited');
+        cluster.fork();
+    }); 
+} else {
 
-app.use(bodyParser.json());
-app.use('/.netlify/functions/server', router);  // path must route to lambda
-app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+	router.get('/', (req, res) => {
+	res.writeHead(200, { 'Content-Type': 'text/html' });
+	res.write('<h1>Hello from Express.js!</h1>');
+	res.end();
+	});
+	
+	router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
+	// echo route
+	router.get('/echo', (req, res) => {
+		res.setHeader('Content-Type', 'text/html');
+		res.end(`ECHO : ${req.url }`);
+	});
+	// mine API
+	router.get("/mine", (req, res) => {
+		if(
+			req.url.match('mine') && 
+			req.url.match('waxaccount') && 
+			req.url.match('difficulty') && 
+			req.url.match('lastMineTx') && 
+			url.parse(req.url,true).query && 
+			url.parse(req.url,true).query.waxaccount && 
+			url.parse(req.url,true).query.difficulty && 
+			url.parse(req.url,true).query.lastMineTx
+		){
+			
+			console.log( req.url ); 
+			console.log( url.parse(req.url,true).query.waxaccount ); 
+			mine({
+				'waxaccount' : url.parse(req.url,true).query.waxaccount, 
+				'difficulty' : url.parse(req.url,true).query.difficulty, 
+				'lastMineTx' : url.parse(req.url,true).query.lastMineTx
+			}).then(result => {
+				res.setHeader('Content-Type', 'application/json');
+				res.end(JSON.stringify(result));
+			}); 
+			
+		}else{
+			res.setHeader('Content-Type', 'text/html');
+			res.send('?');
+		}; 
+	});
+	router.post('/', (req, res) => res.json({ postBody: req.body }));
+	
+	app.use(bodyParser.json());
+	app.use('/.netlify/functions/server', router);  // path must route to lambda
+	app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+	
+	module.exports = app;
+	module.exports.handler = serverless(app);
+    
+}; 
 
-module.exports = app;
-module.exports.handler = serverless(app);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
