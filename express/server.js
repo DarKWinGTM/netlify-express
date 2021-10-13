@@ -7,14 +7,8 @@ const bodyParser = require('body-parser');
 
 const router = express.Router();
 
-// router.get('/', (req, res) => {
-//   res.writeHead(200, { 'Content-Type': 'text/html' });
-//   res.write('<h1>Hello from Express.js!</h1>');
-// //   res.end();
-// });
 // Home route
-router.get("/", (req, res) => {
-    
+router.get('/', (req, res) =>  'text/html' });
     //  sets the header of the response to the user and the type of response that you would be sending back
     res.setHeader('Content-Type', 'text/html');
     res.write("<html>"); 
@@ -26,20 +20,10 @@ router.get("/", (req, res) => {
     res.write("</body>"); 
     res.write("<html>"); 
     res.end(); 
-    
 });
-
-//  router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
-//  router.post('/', (req, res) => res.json({ postBody: req.body }));
-
-// app.use(bodyParser.json());
-// app.use('/.netlify/functions/server', router);  // path must route to lambda
-// app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
-router.get('/echo', (req, res) => {
-    res.setHeader('Content-Type', 'text/html');
-    res.end(`ECHO : ${req.url }`);
+CHO : ${req.url }`);
 });
 
 // Serverless
-// app.use('/.netlify/functions/index', router);
+app.use('/.netlify/functions/index', router);
 module.exports.handler = serverless(app);
