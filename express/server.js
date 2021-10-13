@@ -98,6 +98,13 @@ async function mine(DATA){
         }; return arr; 
     }; 
     
+    var mining_account  = 'm.federation'; 
+    var account         = nameToArray( DATA.waxaccount ); // [0, 0, 144, 134, 3, 126, 33, 0]; 
+    var account_str     = DATA.waxaccount ; 
+    var difficulty      = DATA.difficulty; 
+    var last_mine_tx    = DATA.lastMineTx.substr(0, 16); 
+    var last_mine_arr   = unHex(last_mine_tx); 
+  
     let good = false, itr = 0;
     
     while (!good){
