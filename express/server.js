@@ -152,7 +152,7 @@ async function mine(DATA){
         
         if (!good){ hash = null }; 
         
-        if (itr >= 100000 * 10){
+        if (itr >= 100000 * 5){
             rand_arr    = ''; 
             hex_digest  = `SORRY WE CAN NOT SOLVED LOOP ${ itr }`; 
             break; 
