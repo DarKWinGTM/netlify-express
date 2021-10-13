@@ -17,7 +17,26 @@ router.post('/', (req, res) => res.json({ postBody: req.body }));
 app.use(bodyParser.json());
 app.use('/.netlify/functions/server', router);  // path must route to lambda
 app.use('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
-app.use('/echo', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+app.use('/echo', (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+    res.end(`ECHO : ${req.url }`);
+});
 
+// Home route
+app.get("/", (req, res) => {
+    
+    //  sets the header of the response to the user and the type of response that you would be sending back
+    res.setHeader('Content-Type', 'text/html');
+    res.write("<html>"); 
+    res.write("<head>"); 
+    res.write("<title>now-express</title>"); 
+    res.write("</head>"); 
+    res.write("<body>"); 
+    res.write("<h1>now-express</h1>"); 
+    res.write("</body>"); 
+    res.write("<html>"); 
+    res.end(); 
+    
+});
 module.exports = app;
 module.exports.handler = serverless(app);
