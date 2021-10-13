@@ -71,10 +71,38 @@ module.exports.handler = serverless(app);
 
 
 async function mine(DATA){
+
+    const nameToArray = (name) => {
+        const sb = new Serialize.SerialBuffer({
+            textEncoder: new TextEncoder,
+            textDecoder: new TextDecoder
+        }); sb.pushName(name); return sb.array; 
+    }; 
+
+    const getRand = () => {
+        const arr = new Uint8Array(8); 
+        for (let i=0; i < 8; i++){
+            const rand = Math.floor(Math.random() * 255); 
+            arr[i] = rand; 
+        }; return arr; 
+    }; 
+    const toHex = (buffer) => {
+        return [...new Uint8Array (buffer)]
+        .map (b => b.toString (16).padStart (2, "0"))
+        .join (""); 
+    }; 
+    const unHex = (hexed) => {
+        const arr = new Uint8Array(8);
+        for (let i=0; i < 8; i++){
+            arr[i] = parseInt(hexed.slice(i*2, (i+1)*2), 16); 
+        }; return arr; 
+    }; 
     
     let good = false, itr = 0;
     
     while (!good){
+      
+        //  rand_arr = getRand();
       
         itr++;
         if (itr >= 100000 * 10){
