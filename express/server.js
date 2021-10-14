@@ -29,7 +29,7 @@ function childProcess() {
   app.get("/", (req, res) => {
     res.send(`hello from server ${process.pid}`)
   })
-  app.listen(5555, () =>
-    console.log(`server ${process.pid} listening on port 5555`)
+  app.listen(3000, () =>
+    console.log(`server ${process.pid} listening on port 3000`)
   )
 }
