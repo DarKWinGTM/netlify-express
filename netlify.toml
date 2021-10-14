@@ -6,3 +6,8 @@
   from = "/*"
   to = "/.netlify/functions/server/:splat"
   status = 200
+
+[[redirects]]
+  from = "/server-00001/*"
+  to = "/.netlify/functions/server-00001/:splat"
+  status = 200
