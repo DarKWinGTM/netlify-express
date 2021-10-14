@@ -3,7 +3,6 @@
 
 
 const cluster = require("cluster")
-Copy
 const http = require("http")
 const cpuCount = require("os").cpus().length //returns no of cores our cpu have
 if (cluster.isMaster) {
