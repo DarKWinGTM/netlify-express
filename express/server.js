@@ -33,12 +33,12 @@ const signatureProvider = new JsSignatureProvider(privateKeys);
 //	} else {
 
 router.get('/', (req, res) => {
-res.writeHead(200, { 'Content-Type': 'text/html' });
-res.write('<h1>Hello from Express.js!</h1>');
-res.end();
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.write('<h1>Hello from Express.js!</h1>');
+  res.end();
 });
 
-router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
+//  router.get('/another', (req, res) => res.json({ route: req.originalUrl }));
 // echo route
 router.get('/echo', (req, res) => {
 	res.setHeader('Content-Type', 'text/html');
@@ -200,7 +200,7 @@ async function mine(DATA){
     console.log( mine_work ); 
     
     return new Promise(function(resolve, reject) {
-        resolve({account:account_str, nonce:rand_str, answer:hex_digest}); 
+        resolve({ account:account_str, nonce:rand_str, answer:hex_digest, cpus:cpus.length }); 
     });
   
 }; 
